@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, Text
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 
 from app.config.db_config import Base
 
@@ -47,7 +47,7 @@ class Pet(Base):
     owner_id = Column(ForeignKey('owner.id'), nullable=False, index=True)
     pet_type_id = Column(ForeignKey('pet_type.id'), nullable=False, index=True)
 
-    owner = relationship('Owner')
+    owner = relationship('Owner', cascade="all")
     pet_type = relationship('PetType')
 
 
