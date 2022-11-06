@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 
 from app.model import models
+from app.model.models import Owner
 from app.schema import schemas
 
 
@@ -58,3 +59,46 @@ class OwnerRepository:
             document_number=document_number
         ).delete()
         db.commit()
+
+
+class PetTypeRepository:
+    @staticmethod
+    def find_all(db: Session, skip: int = 0, limit: int = 100):
+        return db.query(models.PetType).offset(skip).limit(limit).all()
+
+    @staticmethod
+    def find_by_type(db: Session, pet_type: str):
+        return db.query(models.PetType).filter_by(type=pet_type).first()
+
+
+class PetRepository:
+
+    @staticmethod
+    def find_all(db: Session, skip: int = 0, limit: int = 100):
+        return db.query(models.Pet).offset(skip).limit(limit).all()
+
+    @staticmethod
+    def save(db: Session, pet_req: schemas.PetCreate):
+        owner = pet_req.owner
+        pet = models.Pet(
+            name=pet_req.name,
+            age=pet_req.age,
+            breed=pet_req.breed,
+            identification_number=pet_req.identification_number,
+            owner=Owner(
+                document_type=owner.document_type,
+                document_number=owner.document_number,
+                names=owner.names,
+                surnames=owner.surnames,
+                age=owner.age,
+                email=owner.email,
+                address=owner.address,
+                cellphone=owner.cellphone,
+                phone_number=owner.phone_number
+            ),
+            pet_type_id=pet_req.pet_type_id
+        )
+        db.add(pet)
+        db.commit()
+        db.refresh(pet)
+        return pet
