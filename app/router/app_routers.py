@@ -64,5 +64,5 @@ async def get_pets(db: Session = Depends(get_db)):
 
 
 @app_router.post("/pets", response_model=schemas.Pet, tags=["pets"])
-async def save_petpet_req(db: Session = Depends(get_db), pet_req: schemas.PetCreate = None):
+async def save_pet_req(db: Session = Depends(get_db), pet_req: schemas.PetCreate = None):
     return PetRepository.save(db, pet_req)
