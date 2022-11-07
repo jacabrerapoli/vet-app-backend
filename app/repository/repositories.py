@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from app.model import models
-from app.model.models import Owner
+from app.model.models import Owner, Vet, Visit
 from app.schema import schemas
 
 
@@ -102,3 +102,54 @@ class PetRepository:
         db.commit()
         db.refresh(pet)
         return pet
+
+
+# VET
+class VetRepository:
+    @staticmethod
+    def find_all(db: Session, skip: int = 0, limit: int = 100):
+        return db.query(models.Vet).offset(skip).limit(limit).all()
+
+    @staticmethod
+    def save(db: Session, vet_req=schemas.VetCreate):
+        vet = Vet(
+            document_type=vet_req.document_type,
+            document_number=vet_req.document_number,
+            names=vet_req.names,
+            surnames=vet_req.surnames,
+            cellphone=vet_req.cellphone,
+            email=vet_req.email
+        )
+        db.add(vet)
+        db.commit()
+        db.refresh(vet)
+        return vet
+
+
+# ITEMS
+class ItemRepository:
+    @staticmethod
+    def find_all(db: Session, skip: int = 0, limit: int = 100):
+        return db.query(models.Item).offset(skip).limit(limit).all()
+
+
+# VISITS
+
+class VisitRepository:
+
+    @staticmethod
+    def find_all(db: Session):
+        return db.query(models.Visit).all()
+
+    @staticmethod
+    def save(db: Session, visit_req=schemas.VisitCreate):
+        visit = Visit(
+            reason=visit_req.reason,
+            cost=visit_req.cost,
+            pet_id=visit_req.pet_id,
+            vet_id=visit_req.vet_id
+        )
+        db.add(visit)
+        db.commit()
+        db.refresh(visit)
+        return visit
