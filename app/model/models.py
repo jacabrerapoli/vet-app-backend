@@ -1,5 +1,5 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, Text
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, Text, DateTime, func
+from sqlalchemy.orm import relationship
 
 from app.config.db_config import Base
 
@@ -8,9 +8,10 @@ class Item(Base):
     __tablename__ = 'item'
 
     id = Column(Integer, primary_key=True)
+    code = Column(String(45))
     name = Column(String(45))
-    qty = Column(Float(asdecimal=True))
-    partial = Column(Float(asdecimal=True))
+    description = Column(String(100))
+    price = Column(Float(asdecimal=True))
     unit_measurement = Column(String(10))
 
 
@@ -58,8 +59,12 @@ class Visit(Base):
     reason = Column(Text)
     cost = Column(Float(asdecimal=True))
     pet_id = Column(ForeignKey('pet.id'), nullable=False, index=True)
+    vet_id = Column(ForeignKey('vet.id'), nullable=False, index=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
     pet = relationship('Pet')
+    vet = relationship('Vet')
 
 
 class Treatment(Base):
@@ -77,13 +82,12 @@ class Vet(Base):
     __tablename__ = 'vet'
 
     id = Column(Integer, primary_key=True)
+    document_type = Column(String(3))
+    document_number = Column(String(20))
     names = Column(String(45))
     surnames = Column(String(45))
     cellphone = Column(String(45))
     email = Column(String(45))
-    visit_id = Column(ForeignKey('visit.id'), nullable=False, index=True)
-
-    visit = relationship('Visit')
 
 
 class TreatmentDetail(Base):
