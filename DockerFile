@@ -1,4 +1,4 @@
-FROM python:3.10
+FROM nginx/unit:1.28.0-python3.10
 
 WORKDIR /vet_app
 
@@ -6,6 +6,14 @@ COPY . /vet_app
 
 RUN pip install -r /vet_app/requirements.txt
 
-CMD ["uvicorn","app.main:app","--host","127.0.0.1", "--port","8000"]
+ENV HOST_DB 127.0.0.1
+ENV PORT_DB 3306
+ENV USER_DB root
+ENV PASSWORD_DB root
+ENV DATABASE_NAME_DB vet_app_db
 
+CMD ["uvicorn","app.main:app","--host","0.0.0.0", "--port","80","--proxy-headers"]
 
+EXPOSE 80
+
+# docker run -d --name <name-container> -p 8000:80 <name-image>

@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  api:
+    image: vet-app
+    container_name: vet-app-back-container
+    ports:
+      - '9000:80'
+    restart: always
+    networks:
+      - vet_app_networking
+networks:
+  vet_app_networking:
+    external: true
