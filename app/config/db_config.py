@@ -1,13 +1,18 @@
+import os
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
-ENGINE_DB = "postgresql+psycopg2"
-USER_DB = "root"
-PASSWORD_DB = "EOfHM7Dgg6zZ46E5VOKZNiMpi4wgxvNs"
-HOST_DB = "dpg-cdiiil4gqg4aiit28o10-a.oregon-postgres.render.com"
-PORT = 5432
-DATABASE_DB = "vet_app_db"
+
+ENGINE_DB = "mysql+pymysql"
+USER_DB = os.environ["USER_DB"]
+PASSWORD_DB = os.environ["PASSWORD_DB"]
+HOST_DB = os.environ["HOST_DB"]
+PORT = os.environ["PORT_DB"]
+DATABASE_DB = os.environ["DATABASE_NAME_DB"]
 
 SQLALCHEMY_DATABASE_URL = f"{ENGINE_DB}://{USER_DB}:{PASSWORD_DB}@{HOST_DB}:{PORT}/{DATABASE_DB}"
+
+print(SQLALCHEMY_DATABASE_URL)
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
