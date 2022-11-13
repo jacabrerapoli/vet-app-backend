@@ -6,12 +6,6 @@ COPY . /vet_app
 
 RUN pip install -r /vet_app/requirements.txt
 
-ENV HOST_DB 127.0.0.1
-ENV PORT_DB 3306
-ENV USER_DB root
-ENV PASSWORD_DB root
-ENV DATABASE_NAME_DB vet_app_db
-
 CMD ["uvicorn","app.main:app","--host","0.0.0.0", "--port","80","--proxy-headers"]
 
 EXPOSE 80
